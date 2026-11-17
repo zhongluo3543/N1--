@@ -72,7 +72,7 @@ jobs:
           kernel_usage: flippy
           openwrt_kernel: 6.12.y
           openwrt_size: 256/1024
-          builder_name: nantayo
+          builder_name: zhongluo
 
       - name: Upload firmware to release
         run: |

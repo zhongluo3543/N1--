@@ -85,9 +85,9 @@ jobs:
             首次使用建议全新刷写
 
             ## 基本信息
-            - IP: 192.168.2.2
+            - IP: 192.168.3.1
             - 账户: root
-            - 密码: password
+            - 密码: 354335
           files: |
             ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
           overwrite_files: true

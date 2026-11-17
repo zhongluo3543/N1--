@@ -75,11 +75,20 @@ jobs:
           builder_name: zhongluo
 
       - name: Upload firmware to release
-        run: |
-          tag="OpenWrt_${{ env.FILE_DATE }}"
-          gh release create $tag --repo ${{ github.repository }} --title "$tag" --notes "$(printf '首次使用建议全新刷写\n* 基本信息\nIP: 192.168.2.2\n账户: root\n密码: password')" 2> /dev/null || true
-          gh release upload $tag ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz --repo ${{ github.repository }} --clobber
+        uses: softprops/action-gh-release@v3
+        if: env.PACKAGED_STATUS == 'success' && !cancelled()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: OpenWrt_${{ env.FILE_DATE }}
+          name: OpenWrt_${{ env.FILE_DATE }}
+          body: |
+            首次使用建议全新刷写
 
-      - name: Delete old releases
-        run: |
-          gh release list --repo ${{ github.repository }} --limit 100 --json tagName --jq '.[].tagName' | tail -n +3 | while read -r tag; do gh release delete "$tag" --repo ${{ github.repository }} --cleanup-tag --yes; done
+            ## 基本信息
+            - IP: 192.168.2.2
+            - 账户: root
+            - 密码: password
+          files: |
+            ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
+          overwrite_files: true
+          fail_on_unmatched_files: true
